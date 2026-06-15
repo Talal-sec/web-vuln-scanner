@@ -12,3 +12,4 @@ venv/
 results.json
 graphify-out/
 .vscode/
+.claude/
