@@ -1,5 +1,5 @@
 import requests
-from dataclasses import dataclass
+from ..models import Finding
 
 SECURITY_HEADERS = {
     "Content-Security-Policy": {
@@ -32,16 +32,6 @@ WEAK_VALUES = {
     "X-Frame-Options": ["ALLOW-FROM"],
     "Content-Security-Policy": ["unsafe-inline", "unsafe-eval"],
 }
-
-
-@dataclass
-class Finding:
-    module: str
-    severity: str
-    url: str
-    parameter: str
-    evidence: str
-    description: str
 
 
 def scan(url: str, session: requests.Session, timeout: int = 10) -> list[Finding]:

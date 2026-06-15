@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import urlparse
-from dataclasses import dataclass
 from ..crawler import Page, inject_param
+from ..models import Finding
 
 REDIRECT_PARAMS = {
     "redirect", "redirect_url", "redirect_uri", "url", "next", "return",
@@ -10,16 +10,7 @@ REDIRECT_PARAMS = {
 }
 
 EVIL_URL = "https://evil-redirect-test.example.com"
-
-
-@dataclass
-class Finding:
-    module: str
-    severity: str
-    url: str
-    parameter: str
-    evidence: str
-    description: str
+_EVIL_NETLOC = urlparse(EVIL_URL).netloc
 
 
 def scan(page: Page, session: requests.Session, timeout: int = 10) -> list[Finding]:
@@ -75,6 +66,6 @@ def scan(page: Page, session: requests.Session, timeout: int = 10) -> list[Findi
 
 def _points_to_evil(location: str) -> bool:
     try:
-        return urlparse(location).netloc == urlparse(EVIL_URL).netloc
+        return urlparse(location).netloc == _EVIL_NETLOC
     except Exception:
         return False

@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import urljoin
-from dataclasses import dataclass
 from ..crawler import Page, inject_param
+from ..models import Finding
 
 DB_ERRORS = [
     "you have an error in your sql syntax",
@@ -25,16 +25,6 @@ DB_ERRORS = [
 ERROR_PAYLOADS = ["'", "''", "`", "\"", "1'", "1\""]
 BOOL_TRUE = "1 AND 1=1"
 BOOL_FALSE = "1 AND 1=2"
-
-
-@dataclass
-class Finding:
-    module: str
-    severity: str
-    url: str
-    parameter: str
-    evidence: str
-    description: str
 
 
 def scan(page: Page, session: requests.Session, timeout: int = 10) -> list[Finding]:

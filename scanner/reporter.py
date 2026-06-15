@@ -1,6 +1,6 @@
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from colorama import init, Fore, Style
 
 init(autoreset=True)
@@ -19,7 +19,7 @@ class Reporter:
     def __init__(self, target: str, verbose: bool = False):
         self.target = target
         self.verbose = verbose
-        self.start_time = datetime.utcnow()
+        self.start_time = datetime.now(timezone.utc)
         self.findings = []
 
     def add_findings(self, findings: list):
@@ -34,7 +34,7 @@ class Reporter:
         print()
 
     def print_summary(self):
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         elapsed = (end_time - self.start_time).total_seconds()
 
         counts = {"HIGH": 0, "MEDIUM": 0, "LOW": 0}
@@ -54,7 +54,7 @@ class Reporter:
         print(Style.BRIGHT + "=" * 60)
 
     def save_json(self, path: str):
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         data = {
             "target": self.target,
             "scan_start": self.start_time.isoformat() + "Z",

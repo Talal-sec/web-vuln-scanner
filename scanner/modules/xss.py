@@ -1,7 +1,7 @@
 import requests
 import html
-from dataclasses import dataclass
 from ..crawler import Page, inject_param
+from ..models import Finding
 
 PAYLOADS = [
     "<script>alert('xss')</script>",
@@ -13,19 +13,6 @@ PAYLOADS = [
     "javascript:alert(1)",
 ]
 
-MARKER = "XSS_TEST_MARKER_"
-
-
-@dataclass
-class Finding:
-    module: str
-    severity: str
-    url: str
-    parameter: str
-    evidence: str
-    description: str
-
-
 def scan(page: Page, session: requests.Session, timeout: int = 10) -> list[Finding]:
     findings = []
     findings.extend(_test_url_params(page, session, timeout))
@@ -34,8 +21,7 @@ def scan(page: Page, session: requests.Session, timeout: int = 10) -> list[Findi
 
 
 def _is_reflected(payload: str, response_text: str) -> bool:
-    # Check if the raw (unescaped) payload appears in the response
-    return payload in response_text and html.escape(payload) not in response_text
+    return payload in response_text
 
 
 def _test_url_params(page: Page, session: requests.Session, timeout: int) -> list[Finding]:
